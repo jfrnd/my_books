@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:kleine_aufgabe/cubit/cubit/book_searcher_cubit.dart';
 
+import 'cubit/book_searcher_cubit.dart';
+import 'cubit/favorite_manager_cubit.dart';
 import 'di/injection.dart';
 import 'presentation/home_page.dart';
 
@@ -25,6 +26,10 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => getIt<BookSearcherCubit>(),
+          ),
+          BlocProvider(
+            create: (context) =>
+                getIt<FavoriteManagerCubit>()..watchFavoritesStarted(),
           ),
         ],
         child: HomePage(),

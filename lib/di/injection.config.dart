@@ -10,12 +10,13 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:objectbox/objectbox.dart' as _i7;
 import 'package:shared_preferences/shared_preferences.dart' as _i6;
 
-import '../cubit/cubit/book_searcher_cubit.dart' as _i8;
+import '../cubit/book_searcher_cubit.dart' as _i8;
+import '../cubit/favorite_manager_cubit.dart' as _i11;
 import '../data/i_local_book_data_source.dart' as _i9;
 import '../data/i_remote_book_data_source.dart' as _i4;
 import '../data/local_book_data_source.dart' as _i10;
 import '../data/remote_book_data_source.dart' as _i5;
-import 'injectable_module.dart' as _i11; // ignore_for_file: unnecessary_lambdas
+import 'injectable_module.dart' as _i12; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -34,7 +35,9 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       () => _i8.BookSearcherCubit(get<_i4.IRemoteBookDataSource>()));
   gh.lazySingleton<_i9.ILocalBookDataSource>(
       () => _i10.LocalBookDataSource(get<_i7.Store>()));
+  gh.factory<_i11.FavoriteManagerCubit>(
+      () => _i11.FavoriteManagerCubit(get<_i9.ILocalBookDataSource>()));
   return get;
 }
 
-class _$InjectableModule extends _i11.InjectableModule {}
+class _$InjectableModule extends _i12.InjectableModule {}

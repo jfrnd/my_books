@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kleine_aufgabe/cubit/cubit/book_searcher_cubit.dart';
+import 'package:kleine_aufgabe/cubit/book_searcher_cubit.dart';
+import 'package:kleine_aufgabe/cubit/favorite_manager_cubit.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
 class HomePage extends StatelessWidget {
@@ -65,7 +66,15 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            const Icon(Icons.favorite),
+            BlocBuilder<FavoriteManagerCubit, FavoriteManagerState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return FavoriteBookList(books: state.favoriteBooks);
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -79,11 +88,46 @@ class QueryBookList extends StatelessWidget {
   const QueryBookList({Key? key, required this.books}) : super(key: key);
 
   @override
+  Widget build(BuildContext context) {
+    final favorites = context
+        .select((FavoriteManagerCubit cubit) => cubit.state.favoriteBooks);
+
+    return ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          final book = books[index];
+
+          final isFavorite =
+              favorites.map((book) => book.remoteId).contains(book.remoteId);
+          return ListTile(
+            trailing: IconButton(
+                onPressed: () => isFavorite
+                    ? context.read<FavoriteManagerCubit>().removeBook(book)
+                    : context.read<FavoriteManagerCubit>().addBook(book),
+                icon: Icon(
+                  Icons.favorite,
+                  color: isFavorite ? Colors.red : Colors.grey,
+                )),
+            title: Text(book.title),
+            subtitle: Text(book.authors.join(", ")),
+          );
+        });
+  }
+}
+
+class FavoriteBookList extends StatelessWidget {
+  final List<Book> books;
+
+  const FavoriteBookList({Key? key, required this.books}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) => ListView.builder(
         itemCount: books.length,
         itemBuilder: (context, index) => ListTile(
-          trailing:
-              IconButton(onPressed: () {}, icon: const Icon(Icons.favorite)),
+          trailing: IconButton(
+              onPressed: () =>
+                  context.read<FavoriteManagerCubit>().removeBook(books[index]),
+              icon: const Icon(Icons.delete)),
           title: Text(books[index].title),
           subtitle: Text(books[index].authors.join(", ")),
         ),
