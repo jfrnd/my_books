@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Book App'),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: const TabBar(tabs: [
+            Tab(
+              text: "Google Books",
+              icon: Icon(Icons.language),
+            ),
+            Tab(
+              text: "My Favorites",
+              icon: Icon(Icons.favorite),
+            ),
+          ]),
+          title: const Text("Book"),
+          actions: [],
+        ),
+        body: TabBarView(
+          children: [
+            const Icon(Icons.language),
+            const Icon(Icons.favorite),
+          ],
+        ),
       ),
     );
   }
