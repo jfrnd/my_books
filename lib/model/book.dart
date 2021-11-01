@@ -24,7 +24,9 @@ class Book {
       remoteId: json['id'],
       title: volumeInfo['title'] ?? '',
       subtitle: volumeInfo['subtitle'] ?? '',
-      authors: (volumeInfo['authors'] as List<dynamic>)
+      authors: (volumeInfo['authors'] != null
+              ? volumeInfo['authors'] as List<dynamic>
+              : [])
           .map((e) => e.toString())
           .toList(),
     );

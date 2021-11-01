@@ -19,7 +19,7 @@ class RemoteBookDataSource implements IRemoteBookDataSource {
     return client.get(url).then(
       (response) {
         final Map<String, dynamic> responseMap = json.decode(response.body);
-        final List<dynamic> items = responseMap['items'];
+        final List<dynamic> items = responseMap['items'] ?? [];
         final List<Book> books = items.map((item) {
           return Book.fromJson(item);
         }).toList();

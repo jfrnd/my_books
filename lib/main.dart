@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:kleine_aufgabe/cubit/cubit/book_searcher_cubit.dart';
 
 import 'di/injection.dart';
 import 'presentation/home_page.dart';
@@ -19,7 +21,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'kleine_aufgabe',
-      home: HomePage(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => getIt<BookSearcherCubit>(),
+          ),
+        ],
+        child: HomePage(),
+      ),
     );
   }
 }
