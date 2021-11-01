@@ -17,14 +17,9 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 4429890115662481560),
       name: 'Book',
-      lastPropertyId: const IdUid(5, 6880432363098805143),
+      lastPropertyId: const IdUid(6, 1155048686936694375),
       flags: 0,
       properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 3676342886212521671),
-            name: 'id',
-            type: 6,
-            flags: 1),
         ModelProperty(
             id: const IdUid(2, 6018618505432188544),
             name: 'remoteId',
@@ -44,7 +39,12 @@ final _entities = <ModelEntity>[
             id: const IdUid(5, 6880432363098805143),
             name: 'authors',
             type: 30,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 1155048686936694375),
+            name: 'localId',
+            type: 6,
+            flags: 1)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -76,7 +76,7 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [3676342886212521671],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -87,9 +87,9 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[0],
         toOneRelations: (Book object) => [],
         toManyRelations: (Book object) => {},
-        getId: (Book object) => object.id,
+        getId: (Book object) => object.localId,
         setId: (Book object, int id) {
-          object.id = id;
+          object.localId = id;
         },
         objectToFB: (Book object, fb.Builder fbb) {
           final remoteIdOffset = fbb.writeString(object.remoteId);
@@ -97,21 +97,22 @@ ModelDefinition getObjectBoxModel() {
           final subtitleOffset = fbb.writeString(object.subtitle);
           final authorsOffset = fbb.writeList(
               object.authors.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id);
+          fbb.startTable(7);
           fbb.addOffset(1, remoteIdOffset);
           fbb.addOffset(2, titleOffset);
           fbb.addOffset(3, subtitleOffset);
           fbb.addOffset(4, authorsOffset);
+          fbb.addInt64(5, object.localId);
           fbb.finish(fbb.endTable());
-          return object.id;
+          return object.localId;
         },
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
 
           final object = Book(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              localId:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
               remoteId:
                   const fb.StringReader().vTableGet(buffer, rootOffset, 6, ''),
               title:
@@ -131,19 +132,19 @@ ModelDefinition getObjectBoxModel() {
 
 /// [Book] entity fields to define ObjectBox queries.
 class Book_ {
-  /// see [Book.id]
-  static final id = QueryIntegerProperty<Book>(_entities[0].properties[0]);
-
   /// see [Book.remoteId]
-  static final remoteId = QueryStringProperty<Book>(_entities[0].properties[1]);
+  static final remoteId = QueryStringProperty<Book>(_entities[0].properties[0]);
 
   /// see [Book.title]
-  static final title = QueryStringProperty<Book>(_entities[0].properties[2]);
+  static final title = QueryStringProperty<Book>(_entities[0].properties[1]);
 
   /// see [Book.subtitle]
-  static final subtitle = QueryStringProperty<Book>(_entities[0].properties[3]);
+  static final subtitle = QueryStringProperty<Book>(_entities[0].properties[2]);
 
   /// see [Book.authors]
   static final authors =
-      QueryStringVectorProperty<Book>(_entities[0].properties[4]);
+      QueryStringVectorProperty<Book>(_entities[0].properties[3]);
+
+  /// see [Book.localId]
+  static final localId = QueryIntegerProperty<Book>(_entities[0].properties[4]);
 }

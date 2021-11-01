@@ -5,15 +5,9 @@
   "entities": [
     {
       "id": "1:4429890115662481560",
-      "lastPropertyId": "5:6880432363098805143",
+      "lastPropertyId": "6:1155048686936694375",
       "name": "Book",
       "properties": [
-        {
-          "id": "1:3676342886212521671",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
         {
           "id": "2:6018618505432188544",
           "name": "remoteId",
@@ -33,6 +27,12 @@
           "id": "5:6880432363098805143",
           "name": "authors",
           "type": 30
+        },
+        {
+          "id": "6:1155048686936694375",
+          "name": "localId",
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []
@@ -46,7 +46,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    3676342886212521671
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:kleine_aufgabe/model/book.dart';
+import 'package:kleine_aufgabe/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'i_local_book_data_source.dart';
@@ -18,7 +19,14 @@ class LocalBookDataSource implements ILocalBookDataSource {
   void eraseBooks() => _box.removeAll();
 
   @override
-  void removeBook(int id) => _box.remove(id);
+  void removeBook(String remoteId) {
+    final book =
+        _box.query(Book_.remoteId.equals(remoteId)).build().findFirst();
+
+    if (book != null) {
+      _box.remove(book.localId);
+    }
+  }
 
   @override
   Stream<List<Book>> watchBooks() {

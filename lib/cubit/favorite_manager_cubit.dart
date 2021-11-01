@@ -25,7 +25,7 @@ class FavoriteManagerCubit extends Cubit<FavoriteManagerState> {
   }
 
   void addBook(Book book) => localBookDataSource.addBook(book);
-  void removeBook(Book book) => localBookDataSource.removeBook(book.id);
+  void removeBook(Book book) => localBookDataSource.removeBook(book.remoteId);
   void eraseBooks() => localBookDataSource.eraseBooks();
 
   Future<void> watchFavoritesStarted() async {

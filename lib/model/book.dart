@@ -3,14 +3,15 @@ import 'package:kleine_aufgabe/objectbox.g.dart';
 
 @Entity()
 class Book {
-  int id;
+  @Id()
+  int localId;
   String remoteId;
   String title;
   String subtitle;
   List<String> authors;
 
   Book({
-    required this.id,
+    required this.localId,
     required this.remoteId,
     required this.title,
     required this.subtitle,
@@ -20,7 +21,7 @@ class Book {
   factory Book.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> volumeInfo = json['volumeInfo'];
     return Book(
-      id: 0,
+      localId: 0,
       remoteId: json['id'],
       title: volumeInfo['title'] ?? '',
       subtitle: volumeInfo['subtitle'] ?? '',

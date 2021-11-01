@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                 getIt<FavoriteManagerCubit>()..watchFavoritesStarted(),
           ),
         ],
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }

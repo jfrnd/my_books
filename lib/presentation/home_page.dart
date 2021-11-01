@@ -23,58 +23,17 @@ class HomePage extends StatelessWidget {
               icon: Icon(Icons.favorite),
             ),
           ]),
-          title: const Text("Book"),
-          actions: [
-            IconButton(
-                onPressed: () =>
-                    context.read<BookSearcherCubit>().queryStarted(),
-                icon: const Icon(Icons.search))
-          ],
+          title: const Text("Google Books"),
         ),
         body: TabBarView(
           children: [
             Column(
-              children: [
-                ListTile(
-                  title: TextField(
-                    onChanged: (value) =>
-                        context.read<BookSearcherCubit>().keywordChanged(value),
-                    decoration: const InputDecoration(
-                      hintText: 'type in search keyword...',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () =>
-                        context.read<BookSearcherCubit>().queryStarted(),
-                    icon: const Icon(Icons.search),
-                  ),
-                ),
-                Expanded(
-                  child: BlocBuilder<BookSearcherCubit, BookSearcherState>(
-                    builder: (context, state) {
-                      return state.map(
-                        initial: (_) => Container(),
-                        loadInProgress: (_) =>
-                            const Center(child: CircularProgressIndicator()),
-                        loadSuccess: (state) =>
-                            QueryBookList(books: state.books),
-                        loadFailure: (_) => Container(),
-                      );
-                    },
-                  ),
-                ),
+              children: const [
+                SearchBar(),
+                Expanded(child: QueryBookList()),
               ],
             ),
-            BlocBuilder<FavoriteManagerCubit, FavoriteManagerState>(
-              builder: (context, state) {
-                if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return FavoriteBookList(books: state.favoriteBooks);
-                }
-              },
-            ),
+            const FavoriteBookList(),
           ],
         ),
       ),
@@ -82,54 +41,103 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class QueryBookList extends StatelessWidget {
-  final List<Book> books;
+class SearchBar extends StatelessWidget {
+  const SearchBar({Key? key}) : super(key: key);
 
-  const QueryBookList({Key? key, required this.books}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListTile(
+        tileColor: Colors.grey[200],
+        title: TextField(
+          onChanged: (value) =>
+              context.read<BookSearcherCubit>().keywordChanged(value),
+          decoration: const InputDecoration(
+            hintText: 'type in search keyword...',
+            border: InputBorder.none,
+          ),
+        ),
+        trailing: IconButton(
+          onPressed: () => context.read<BookSearcherCubit>().queryStarted(),
+          icon: const Icon(Icons.search),
+        ),
+      ),
+    );
+  }
+}
+
+class QueryBookList extends StatelessWidget {
+  const QueryBookList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final favorites = context
         .select((FavoriteManagerCubit cubit) => cubit.state.favoriteBooks);
 
-    return ListView.builder(
-        itemCount: books.length,
-        itemBuilder: (context, index) {
-          final book = books[index];
+    return BlocBuilder<BookSearcherCubit, BookSearcherState>(
+      builder: (context, state) {
+        return state.map(
+          initial: (_) => Container(),
+          loadInProgress: (_) =>
+              const Center(child: CircularProgressIndicator()),
+          loadFailure: (_) => Container(),
+          loadSuccess: (state) => ListView.builder(
+              itemCount: state.books.length,
+              itemBuilder: (context, index) {
+                final book = state.books[index];
 
-          final isFavorite =
-              favorites.map((book) => book.remoteId).contains(book.remoteId);
-          return ListTile(
-            trailing: IconButton(
-                onPressed: () => isFavorite
-                    ? context.read<FavoriteManagerCubit>().removeBook(book)
-                    : context.read<FavoriteManagerCubit>().addBook(book),
-                icon: Icon(
-                  Icons.favorite,
-                  color: isFavorite ? Colors.red : Colors.grey,
-                )),
-            title: Text(book.title),
-            subtitle: Text(book.authors.join(", ")),
-          );
-        });
+                final isFavorite = favorites
+                    .map((book) => book.remoteId)
+                    .contains(book.remoteId);
+                return ListTile(
+                  trailing: IconButton(
+                      onPressed: () => isFavorite
+                          ? context
+                              .read<FavoriteManagerCubit>()
+                              .removeBook(book)
+                          : context.read<FavoriteManagerCubit>().addBook(book),
+                      icon: Icon(
+                        Icons.favorite,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                      )),
+                  title: Text(book.title),
+                  subtitle: Text(book.authors.join(", ")),
+                );
+              }),
+        );
+      },
+    );
   }
 }
 
 class FavoriteBookList extends StatelessWidget {
-  final List<Book> books;
-
-  const FavoriteBookList({Key? key, required this.books}) : super(key: key);
+  const FavoriteBookList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ListView.builder(
-        itemCount: books.length,
-        itemBuilder: (context, index) => ListTile(
-          trailing: IconButton(
-              onPressed: () =>
-                  context.read<FavoriteManagerCubit>().removeBook(books[index]),
-              icon: const Icon(Icons.delete)),
-          title: Text(books[index].title),
-          subtitle: Text(books[index].authors.join(", ")),
-        ),
+  Widget build(BuildContext context) =>
+      BlocBuilder<FavoriteManagerCubit, FavoriteManagerState>(
+        builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ListView.builder(
+              itemCount: state.favoriteBooks.length,
+              itemBuilder: (context, index) {
+                final book = state.favoriteBooks[index];
+                return ListTile(
+                  trailing: IconButton(
+                      onPressed: () =>
+                          context.read<FavoriteManagerCubit>().removeBook(book),
+                      icon: const Icon(Icons.delete)),
+                  title: Text(book.title),
+                  subtitle: Text(
+                    book.authors.join(", "),
+                  ),
+                );
+              },
+            );
+          }
+        },
       );
 }
