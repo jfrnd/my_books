@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
+import '../apikey.dart';
 import 'i_remote_book_data_source.dart';
 
 @LazySingleton(as: IRemoteBookDataSource)
@@ -14,7 +15,8 @@ class RemoteBookDataSource implements IRemoteBookDataSource {
   @override
   Future<List<Book>> getBooks(String keyword) {
     final url = Uri.parse(
-        'https://www.googleapis.com/books/v1/volumes?q=$keyword&key=AIzaSyBdg9xKHFCG8pbyrTDE-O2H3fEU6AU9QsE');
+      'https://www.googleapis.com/books/v1/volumes?q=$keyword&key=$apiKey',
+    );
 
     return client.get(url).then(
       (response) {
