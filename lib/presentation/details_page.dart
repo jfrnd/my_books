@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kleine_aufgabe/cubit/favorite_manager_cubit.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 import 'package:kleine_aufgabe/presentation/home_page.dart';
+import 'package:kleine_aufgabe/presentation/widgets/add_delete_favorite_button.dart';
+import 'package:kleine_aufgabe/presentation/widgets/book_image.dart';
 
 class DetailsPage extends StatelessWidget {
   final Book book;

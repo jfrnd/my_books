@@ -38,7 +38,7 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
           ),
         );
       }
-    } on ServerException {
+    } on Exception {
       emit(
         state.copyWith(
           isLoading: false,
