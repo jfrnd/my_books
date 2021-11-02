@@ -26,7 +26,7 @@ mit dieser einfachen App kann der User Bücher über die Google Books API suchen
 Da für die Speicherung der lokalen Daten <strong>objectbox</strong> verwendet wird und ich keinen Mac besitze, müssen für die Installation unter iOS noch kleine Änderungen vorgenommen werden. Hierfür wird XCode benötigt. Nähere Informationen im <a href="https://pub.dev/packages/objectbox" title="Readme von Objectbox">Readme von Objectbox</a>.
 <h1>Screenshots</h1>
 <p float="left">
-  <img src="screenshots/1.png" width="270" height="500"/>
+  <img src="screenshots/6.png" width="270" height="500"/>
   <img src="screenshots/2.png" width="270" height="500"/> 
   <img src="screenshots/3.png" width="270" height="500"/>
 </p>
