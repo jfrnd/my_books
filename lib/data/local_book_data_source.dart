@@ -3,7 +3,12 @@ import 'package:kleine_aufgabe/model/book.dart';
 import 'package:kleine_aufgabe/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
-import 'i_local_book_data_source.dart';
+abstract class ILocalBookDataSource {
+  Stream<List<Book>> watchBooks();
+  void addBook(Book note);
+  void removeBook(String remoteId);
+  void eraseBooks();
+}
 
 @LazySingleton(as: ILocalBookDataSource)
 class LocalBookDataSource implements ILocalBookDataSource {
@@ -20,11 +25,11 @@ class LocalBookDataSource implements ILocalBookDataSource {
 
   @override
   void removeBook(String remoteId) {
-    final book =
-        _box.query(Book_.remoteId.equals(remoteId)).build().findFirst();
-
+    final query = _box.query(Book_.remoteId.equals(remoteId)).build();
+    final book = query.findFirst();
     if (book != null) {
       _box.remove(book.localId);
+      query.close();
     }
   }
 

@@ -4,7 +4,14 @@ import 'package:injectable/injectable.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
 import '../apikey.dart';
-import 'i_remote_book_data_source.dart';
+import '../exceptions.dart';
+
+abstract class IRemoteBookDataSource {
+  /// Calls the https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=40&key=$apiKey endpoint.
+  ///
+  /// Throws a [ServerException] for all error codes.
+  Future<List<Book>> getBooks(String keyword);
+}
 
 @LazySingleton(as: IRemoteBookDataSource)
 class RemoteBookDataSource implements IRemoteBookDataSource {
@@ -13,19 +20,23 @@ class RemoteBookDataSource implements IRemoteBookDataSource {
   RemoteBookDataSource(this.client);
 
   @override
-  Future<List<Book>> getBooks(String keyword) {
+  Future<List<Book>> getBooks(String keyword) async {
     final url = Uri.parse(
-      'https://www.googleapis.com/books/v1/volumes?q=$keyword&key=$apiKey',
+      'https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=40&key=$apiKey',
     );
 
     return client.get(url).then(
       (response) {
-        final Map<String, dynamic> responseMap = json.decode(response.body);
-        final List<dynamic> items = responseMap['items'] ?? [];
-        final List<Book> books = items.map((item) {
-          return Book.fromJson(item);
-        }).toList();
-        return books;
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseMap = json.decode(response.body);
+          final List<dynamic> items = responseMap['items'] ?? [];
+          final List<Book> books = items.map((item) {
+            return Book.fromJson(item);
+          }).toList();
+          return books;
+        } else {
+          throw ServerException();
+        }
       },
     );
   }

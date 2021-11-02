@@ -1,0 +1,142 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 989,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "oZAumAEACAAJ",
+      "etag": "+IrlXdoOw8g",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/oZAumAEACAAJ",
+      "volumeInfo": {
+        "title": "Produktionsaufbau in China",
+        "subtitle": "Handlungsempfehlungen als Ergebnis einer empirischen Analyse",
+        "authors": [
+          "Jürgen Mallon",
+          "Sebastian Dannenberg"
+        ],
+        "publisher": "Springer",
+        "publishedDate": "2011-09-04",
+        "description": "Ausgehend von den Erfahrungen in fast 50 deutschen Unternehmen stellen die Autoren Konzepte und erfolgskritische Elemente für den Produktionsaufbau in China vor und bewerten diese. Aus der Typisierung der unterschiedlichen Vorgehensmodelle und einer Unternehmensbewertung leiten sie Erfolg versprechende Vorgehensweisen ab und beschreiben die erforderlichen Maßnahmen. Die Handlungsempfehlungen orientieren sich an Kriterien der Nachhaltigkeit, Hinweise für einen Schnellstart im chinesischen Markt werden ebenfalls gegeben.",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "3642222382"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9783642222382"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 101,
+        "printType": "BOOK",
+        "categories": [
+          "Technology & Engineering"
+        ],
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=oZAumAEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=oZAumAEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "de",
+        "previewLink": "http://books.google.de/books?id=oZAumAEACAAJ&dq=china&hl=&cd=1&source=gbs_api",
+        "infoLink": "http://books.google.de/books?id=oZAumAEACAAJ&dq=china&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Produktionsaufbau_in_China.html?hl=&id=oZAumAEACAAJ"
+      },
+      "saleInfo": {
+        "country": "DE",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "DE",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=oZAumAEACAAJ&hl=&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Ausgehend von den Erfahrungen in fast 50 deutschen Unternehmen stellen die Autoren Konzepte und erfolgskritische Elemente für den Produktionsaufbau in China vor und bewerten diese."
+      }
+    },
+    {
+      "kind": "books#volume",
+      "id": "DqIQogEACAAJ",
+      "etag": "EfiflX/J0s4",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/DqIQogEACAAJ",
+      "volumeInfo": {
+        "title": "Wolkenläufer",
+        "subtitle": "Geschichten vom Leben in China",
+        "authors": [
+          "Angela Köckritz"
+        ],
+        "publishedDate": "2015-06",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "3426276542"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9783426276549"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 304,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "imageLinks": {
+          "smallThumbnail": "http://books.google.com/books/content?id=DqIQogEACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+          "thumbnail": "http://books.google.com/books/content?id=DqIQogEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+        },
+        "language": "de",
+        "previewLink": "http://books.google.de/books?id=DqIQogEACAAJ&dq=china&hl=&cd=2&source=gbs_api",
+        "infoLink": "http://books.google.de/books?id=DqIQogEACAAJ&dq=china&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Wolkenl%C3%A4ufer.html?hl=&id=DqIQogEACAAJ"
+      },
+      "saleInfo": {
+        "country": "DE",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "DE",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=DqIQogEACAAJ&hl=&printsec=frontcover&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "Angela Köckritz, die mehrere Jahre Peking-Korrespondentin der äZeitä war, porträtiert u.a. eine Mätresse, eine Bürgerrechtlerin, einen Einsiedler und einen Wandersänger."
+      }
+    }
+  ]
+}

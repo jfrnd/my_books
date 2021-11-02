@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
-import 'package:kleine_aufgabe/data/i_remote_book_data_source.dart';
+import 'package:kleine_aufgabe/data/remote_book_data_source.dart';
+import 'package:kleine_aufgabe/exceptions.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
 part 'book_searcher_state.dart';
@@ -16,18 +17,19 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
   BookSearcherCubit(this.remoteDataSource)
       : super(const BookSearcherState.initial());
 
-  void queryStarted() {
+  Future<void> queryStarted() async {
     emit(const BookSearcherState.loadInProgress());
 
-    remoteDataSource.getBooks(keyword).then(
-      (books) {
-        if (books.isNotEmpty) {
-          emit(BookSearcherState.loadSuccess(books));
-        } else {
-          emit(const BookSearcherState.loadFailure());
-        }
-      },
-    );
+    try {
+      final books = await remoteDataSource.getBooks(keyword);
+      if (books.isNotEmpty) {
+        emit(BookSearcherState.loadSuccess(books));
+      } else {
+        emit(const BookSearcherState.loadFailure());
+      }
+    } on ServerException {
+      emit(const BookSearcherState.loadFailure());
+    }
   }
 
   void keywordChanged(String newKeyword) {

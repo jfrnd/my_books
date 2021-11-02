@@ -1,8 +1,9 @@
 import 'package:objectbox/objectbox.dart';
 import 'package:kleine_aufgabe/objectbox.g.dart';
+import 'package:equatable/equatable.dart';
 
 @Entity()
-class Book {
+class Book extends Equatable {
   @Id()
   int localId;
   String remoteId;
@@ -23,13 +24,22 @@ class Book {
     return Book(
       localId: 0,
       remoteId: json['id'],
-      title: volumeInfo['title'] ?? '',
-      subtitle: volumeInfo['subtitle'] ?? '',
+      title: volumeInfo['title'] ?? 'no title',
+      subtitle: volumeInfo['subtitle'] ?? 'no subtitle',
       authors: (volumeInfo['authors'] != null
               ? volumeInfo['authors'] as List<dynamic>
-              : [])
+              : ['no author'])
           .map((e) => e.toString())
           .toList(),
     );
   }
+
+  @override
+  List<Object?> get props => [
+        localId,
+        remoteId,
+        title,
+        subtitle,
+        authors,
+      ];
 }

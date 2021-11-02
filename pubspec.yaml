@@ -18,15 +18,18 @@ dependencies:
   injectable: ^1.5.0
   shared_preferences: ^2.0.6
   http: ^0.13.4
+  equatable: ^2.0.3
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.1.4
+  bloc_test: ^8.4.0
   freezed: ^0.15.0+1
   objectbox_generator: ^1.2.0
   injectable_generator: ^1.5.2
   flutter_lints: ^1.0.4
-
+  mocktail: ^0.2.0
+  
 flutter:
   uses-material-design: true

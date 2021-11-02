@@ -81,7 +81,9 @@ class QueryBookList extends StatelessWidget {
           initial: (_) => Container(),
           loadInProgress: (_) =>
               const Center(child: CircularProgressIndicator()),
-          loadFailure: (_) => Container(),
+          loadFailure: (_) => const Center(
+            child: Text('search failed :-('),
+          ),
           loadSuccess: (state) => ListView.builder(
               itemCount: state.books.length,
               itemBuilder: (context, index) {
