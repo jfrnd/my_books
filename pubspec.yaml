@@ -16,9 +16,10 @@ dependencies:
   flutter_bloc: ^7.3.1
   freezed_annotation: ^0.15.0
   injectable: ^1.5.0
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.8
   http: ^0.13.4
   equatable: ^2.0.3
+  flutter_typeahead: ^3.2.1
   
 dev_dependencies:
   flutter_test:

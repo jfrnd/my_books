@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kleine_aufgabe/data/remote_book_data_source.dart';
-import 'package:kleine_aufgabe/exceptions.dart';
 import 'package:kleine_aufgabe/model/book.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'book_searcher_state.dart';
 part 'book_searcher_cubit.freezed.dart';
@@ -11,10 +11,16 @@ part 'book_searcher_cubit.freezed.dart';
 @injectable
 class BookSearcherCubit extends Cubit<BookSearcherState> {
   final IRemoteBookDataSource remoteDataSource;
+  final SharedPreferences prefs;
 
-  BookSearcherCubit(this.remoteDataSource) : super(BookSearcherState.initial());
+  static const searchHistory = "history";
+
+  BookSearcherCubit(this.remoteDataSource, this.prefs)
+      : super(BookSearcherState.initial());
 
   Future<void> newQueryStarted(String keyword) async {
+    updateSearchHistory(keyword);
+
     emit(state.copyWith(
       isLoading: true,
       loadingFailed: false,
@@ -76,6 +82,15 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
           loadingFailed: true,
         ),
       );
+    }
+  }
+
+  void updateSearchHistory(String keyword) {
+    final List<String> searchHistory =
+        prefs.getStringList(BookSearcherCubit.searchHistory) ?? [];
+    if (!searchHistory.contains(keyword) && keyword.isNotEmpty) {
+      prefs.setStringList(BookSearcherCubit.searchHistory,
+          ([keyword] + searchHistory).take(10).toList());
     }
   }
 }

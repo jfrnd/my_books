@@ -12,6 +12,7 @@ mit dieser einfachen App kann der User Bücher über die Google Books API suchen
 - Anzeige von mehr Details (wenn vorhanden: großes Bild, Subtitle und Buchbeschreibung) durch Klick auf Listenelement
 - Anzeige von Favoriten unter zweitem Tab "Favorites"
 - Sukzessives Laden der Ergenisse in 10er Schritten beim Scrollen nach unten (Pagination)
+- Search history
 - Ein paar Test Cases
 <h1>ToDo</h1>
 

@@ -31,8 +31,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       preResolve: true);
   await gh.factoryAsync<_i7.Store>(() => injectableModule.store,
       preResolve: true);
-  gh.factory<_i8.BookSearcherCubit>(
-      () => _i8.BookSearcherCubit(get<_i4.IRemoteBookDataSource>()));
+  gh.factory<_i8.BookSearcherCubit>(() => _i8.BookSearcherCubit(
+      get<_i4.IRemoteBookDataSource>(), get<_i6.SharedPreferences>()));
   gh.lazySingleton<_i9.ILocalBookDataSource>(
       () => _i9.LocalBookDataSource(get<_i7.Store>()));
   gh.factory<_i10.FavoriteManagerCubit>(
