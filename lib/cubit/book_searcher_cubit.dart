@@ -55,33 +55,35 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
   }
 
   Future<void> curQueryExtended() async {
-    emit(state.copyWith(
-      isLoading: true,
-      loadingFailed: false,
-    ));
+    if (!state.isLoading) {
+      emit(state.copyWith(
+        isLoading: true,
+        loadingFailed: false,
+      ));
 
-    try {
-      final books = await remoteDataSource.getBooks(
-        state.curQuerryKeyword,
-        state.nextStartIndex,
-      );
-      if (books.isNotEmpty) {
+      try {
+        final books = await remoteDataSource.getBooks(
+          state.curQuerryKeyword,
+          state.nextStartIndex,
+        );
+        if (books.isNotEmpty) {
+          emit(
+            state.copyWith(
+              books: state.books + books,
+              loadingFailed: false,
+              isLoading: false,
+              nextStartIndex: state.nextStartIndex + 10,
+            ),
+          );
+        }
+      } on Exception {
         emit(
           state.copyWith(
-            books: state.books + books,
-            loadingFailed: false,
             isLoading: false,
-            nextStartIndex: state.nextStartIndex + 10,
+            loadingFailed: true,
           ),
         );
       }
-    } on Exception {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          loadingFailed: true,
-        ),
-      );
     }
   }
 

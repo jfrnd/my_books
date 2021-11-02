@@ -18,6 +18,10 @@ class HomePage extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.read<BookSearcherCubit>().curQueryExtended(),
+          child: Icon(Icons.search),
+        ),
         appBar: AppBar(
           bottom: const TabBar(tabs: [
             Tab(
@@ -137,4 +141,3 @@ class FavoriteBookList extends StatelessWidget {
         },
       );
 }
-
