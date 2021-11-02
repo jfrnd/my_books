@@ -17,7 +17,7 @@ mit dieser einfachen App kann der User Bücher über die Google Books API suchen
 <h1>ToDo</h1>
 
 - Detaillierte Suche nach Authoren, Titel usw.
-- Bilder der Favoriten in einen Cache laden
+- Bilder der Favoriten offline speichern
 - No Internet Connection Handeling
 - Sortierfunktionen
 - Mehr Details zum Buch integrieren
