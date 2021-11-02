@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:4429890115662481560",
-      "lastPropertyId": "6:1155048686936694375",
+      "lastPropertyId": "8:2139006922821595918",
       "name": "Book",
       "properties": [
         {
@@ -33,6 +33,16 @@
           "name": "localId",
           "type": 6,
           "flags": 1
+        },
+        {
+          "id": "7:1728725699244430847",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:2139006922821595918",
+          "name": "imageUrl",
+          "type": 9
         }
       ],
       "relations": []

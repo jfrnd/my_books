@@ -17,7 +17,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 4429890115662481560),
       name: 'Book',
-      lastPropertyId: const IdUid(6, 1155048686936694375),
+      lastPropertyId: const IdUid(8, 2139006922821595918),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -44,7 +44,17 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 1155048686936694375),
             name: 'localId',
             type: 6,
-            flags: 1)
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(7, 1728725699244430847),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 2139006922821595918),
+            name: 'imageUrl',
+            type: 9,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -97,12 +107,18 @@ ModelDefinition getObjectBoxModel() {
           final subtitleOffset = fbb.writeString(object.subtitle);
           final authorsOffset = fbb.writeList(
               object.authors.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(7);
+          final descriptionOffset = fbb.writeString(object.description);
+          final imageUrlOffset = object.imageUrl == null
+              ? null
+              : fbb.writeString(object.imageUrl!);
+          fbb.startTable(9);
           fbb.addOffset(1, remoteIdOffset);
           fbb.addOffset(2, titleOffset);
           fbb.addOffset(3, subtitleOffset);
           fbb.addOffset(4, authorsOffset);
           fbb.addInt64(5, object.localId);
+          fbb.addOffset(6, descriptionOffset);
+          fbb.addOffset(7, imageUrlOffset);
           fbb.finish(fbb.endTable());
           return object.localId;
         },
@@ -121,7 +137,11 @@ ModelDefinition getObjectBoxModel() {
                   const fb.StringReader().vTableGet(buffer, rootOffset, 10, ''),
               authors:
                   const fb.ListReader<String>(fb.StringReader(), lazy: false)
-                      .vTableGet(buffer, rootOffset, 12, []));
+                      .vTableGet(buffer, rootOffset, 12, []),
+              description:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 16, ''),
+              imageUrl: const fb.StringReader()
+                  .vTableGetNullable(buffer, rootOffset, 18));
 
           return object;
         })
@@ -147,4 +167,11 @@ class Book_ {
 
   /// see [Book.localId]
   static final localId = QueryIntegerProperty<Book>(_entities[0].properties[4]);
+
+  /// see [Book.description]
+  static final description =
+      QueryStringProperty<Book>(_entities[0].properties[5]);
+
+  /// see [Book.imageUrl]
+  static final imageUrl = QueryStringProperty<Book>(_entities[0].properties[6]);
 }

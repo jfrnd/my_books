@@ -33,7 +33,7 @@ void main() {
 
   group('', () {
     const keyword = "precht";
-    final books = [book_one, book_two];
+    final books = [bookOne, bookTwo];
 
     test(
       '''should perform a GET request with httpclient''',

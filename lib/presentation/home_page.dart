@@ -4,6 +4,8 @@ import 'package:kleine_aufgabe/cubit/book_searcher_cubit.dart';
 import 'package:kleine_aufgabe/cubit/favorite_manager_cubit.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
+import 'details_page.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -72,9 +74,6 @@ class QueryBookList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favorites = context
-        .select((FavoriteManagerCubit cubit) => cubit.state.favoriteBooks);
-
     return BlocBuilder<BookSearcherCubit, BookSearcherState>(
       builder: (context, state) {
         return state.map(
@@ -89,26 +88,54 @@ class QueryBookList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final book = state.books[index];
 
-                final isFavorite = favorites
-                    .map((book) => book.remoteId)
-                    .contains(book.remoteId);
                 return ListTile(
-                  trailing: IconButton(
-                      onPressed: () => isFavorite
-                          ? context
-                              .read<FavoriteManagerCubit>()
-                              .removeBook(book)
-                          : context.read<FavoriteManagerCubit>().addBook(book),
-                      icon: Icon(
-                        Icons.favorite,
-                        color: isFavorite ? Colors.red : Colors.grey,
-                      )),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (_) => DetailsPage(book, context: context),
+                  ),
+                  leading: BookImage(book: book, sizeRatio: 0.1),
+                  trailing: AddFavoriteButton(book: book, context: context),
                   title: Text(book.title),
                   subtitle: Text(book.authors.join(", ")),
                 );
               }),
         );
       },
+    );
+  }
+}
+
+class BookImage extends StatelessWidget {
+  const BookImage({
+    Key? key,
+    required this.book,
+    required this.sizeRatio,
+  }) : super(key: key);
+
+  final Book book;
+  final double sizeRatio;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      book.imageUrl ?? "",
+      height: MediaQuery.of(context).size.height * sizeRatio,
+      width: MediaQuery.of(context).size.width * sizeRatio,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        return CircularProgressIndicator(
+          value: loadingProgress.expectedTotalBytes != null
+              ? loadingProgress.cumulativeBytesLoaded /
+                  loadingProgress.expectedTotalBytes!
+              : null,
+        );
+      },
+      errorBuilder: (context, error, stackTrace) => SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.1,
+          child: const FittedBox(child: Icon(Icons.book_online))),
     );
   }
 }
@@ -128,6 +155,11 @@ class FavoriteBookList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final book = state.favoriteBooks[index];
                 return ListTile(
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (_) => DetailsPage(book, context: context),
+                  ),
+                  leading: BookImage(book: book, sizeRatio: 0.1),
                   trailing: IconButton(
                       onPressed: () =>
                           context.read<FavoriteManagerCubit>().removeBook(book),
@@ -142,4 +174,37 @@ class FavoriteBookList extends StatelessWidget {
           }
         },
       );
+}
+
+class AddFavoriteButton extends StatelessWidget {
+  final Book book;
+  final BuildContext context;
+
+  const AddFavoriteButton({
+    Key? key,
+    required this.book,
+    required this.context,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FavoriteManagerCubit, FavoriteManagerState>(
+      bloc: BlocProvider.of(this.context),
+      buildWhen: (p, c) => p.favoriteBooks != c.favoriteBooks,
+      builder: (context, state) {
+        final isFavorite = state.favoriteBooks
+            .map((book) => book.remoteId)
+            .contains(book.remoteId);
+        return IconButton(
+          onPressed: () => isFavorite
+              ? this.context.read<FavoriteManagerCubit>().removeBook(book)
+              : this.context.read<FavoriteManagerCubit>().addBook(book),
+          icon: Icon(
+            Icons.favorite,
+            color: isFavorite ? Colors.red : Colors.grey,
+          ),
+        );
+      },
+    );
+  }
 }

@@ -8,7 +8,7 @@ void main() {
       'two identical book objects should be equal',
       () {
         // act
-        final isEqual = book_one == book_one_copy;
+        final isEqual = bookOne == bookOneCopy;
         // assert
         expect(isEqual, true);
       },
@@ -17,7 +17,7 @@ void main() {
       'two different book objects should not be equal',
       () {
         // act
-        final isNotEqual = book_one != book_two;
+        final isNotEqual = bookOne != bookTwo;
         // assert
         expect(isNotEqual, true);
       },
