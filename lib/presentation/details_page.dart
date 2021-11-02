@@ -19,7 +19,13 @@ class DetailsPage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Details'),
-            actions: [AddFavoriteButton(book: book, context: this.context)],
+            actions: [
+              AddDeleteFavoriteButton(
+                book: book,
+                context: this.context,
+                iconData: Icons.favorite,
+              )
+            ],
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -53,7 +59,7 @@ class DetailsPage extends StatelessWidget {
                           ListTile(
                             title: Text(
                               book.authors.join(', '),
-                              maxLines: 2,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

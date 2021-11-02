@@ -59,9 +59,13 @@ class SearchBar extends StatelessWidget {
             hintText: 'type in search keyword...',
             border: InputBorder.none,
           ),
+          textInputAction: TextInputAction.done,
         ),
         trailing: IconButton(
-          onPressed: () => context.read<BookSearcherCubit>().queryStarted(),
+          onPressed: () {
+            context.read<BookSearcherCubit>().queryStarted();
+            FocusScope.of(context).unfocus();
+          },
           icon: const Icon(Icons.search),
         ),
       ),
@@ -83,25 +87,45 @@ class QueryBookList extends StatelessWidget {
           loadFailure: (_) => const Center(
             child: Text('search failed :-('),
           ),
-          loadSuccess: (state) => ListView.builder(
-              itemCount: state.books.length,
-              itemBuilder: (context, index) {
-                final book = state.books[index];
-
-                return ListTile(
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (_) => DetailsPage(book, context: context),
-                  ),
-                  leading: BookImage(book: book, sizeRatio: 0.1),
-                  trailing: AddFavoriteButton(book: book, context: context),
-                  title: Text(book.title),
-                  subtitle: Text(book.authors.join(", ")),
-                );
-              }),
+          loadSuccess: (state) => BookList(
+              books: state.books, actionButtonIconData: Icons.favorite),
         );
       },
     );
+  }
+}
+
+class BookList extends StatelessWidget {
+  const BookList({
+    Key? key,
+    required this.books,
+    required this.actionButtonIconData,
+  }) : super(key: key);
+
+  final List<Book> books;
+  final IconData actionButtonIconData;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          final book = books[index];
+
+          return ListTile(
+            onTap: () => showDialog(
+              context: context,
+              builder: (_) => DetailsPage(book, context: context),
+            ),
+            leading: BookImage(book: book, sizeRatio: 0.1),
+            trailing: AddDeleteFavoriteButton(
+                book: book, context: context, iconData: actionButtonIconData),
+            title:
+                Text(book.title, overflow: TextOverflow.ellipsis, maxLines: 2),
+            subtitle: Text(book.authors.join(", "),
+                overflow: TextOverflow.ellipsis, maxLines: 1),
+          );
+        });
   }
 }
 
@@ -150,40 +174,23 @@ class FavoriteBookList extends StatelessWidget {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            return ListView.builder(
-              itemCount: state.favoriteBooks.length,
-              itemBuilder: (context, index) {
-                final book = state.favoriteBooks[index];
-                return ListTile(
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (_) => DetailsPage(book, context: context),
-                  ),
-                  leading: BookImage(book: book, sizeRatio: 0.1),
-                  trailing: IconButton(
-                      onPressed: () =>
-                          context.read<FavoriteManagerCubit>().removeBook(book),
-                      icon: const Icon(Icons.delete)),
-                  title: Text(book.title),
-                  subtitle: Text(
-                    book.authors.join(", "),
-                  ),
-                );
-              },
-            );
+            return BookList(
+                books: state.favoriteBooks, actionButtonIconData: Icons.delete);
           }
         },
       );
 }
 
-class AddFavoriteButton extends StatelessWidget {
+class AddDeleteFavoriteButton extends StatelessWidget {
+  final IconData iconData;
   final Book book;
   final BuildContext context;
 
-  const AddFavoriteButton({
+  const AddDeleteFavoriteButton({
     Key? key,
     required this.book,
     required this.context,
+    required this.iconData,
   }) : super(key: key);
 
   @override
@@ -200,7 +207,7 @@ class AddFavoriteButton extends StatelessWidget {
               ? this.context.read<FavoriteManagerCubit>().removeBook(book)
               : this.context.read<FavoriteManagerCubit>().addBook(book),
           icon: Icon(
-            Icons.favorite,
+            iconData,
             color: isFavorite ? Colors.red : Colors.grey,
           ),
         );
