@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kleine_aufgabe/cubit/book_searcher_cubit.dart';
 import 'package:kleine_aufgabe/cubit/favorite_manager_cubit.dart';
+import 'package:kleine_aufgabe/di/injection.dart';
+import 'package:kleine_aufgabe/di/scroll_controller.dart';
 import 'package:kleine_aufgabe/model/book.dart';
 
 import 'details_page.dart';
@@ -17,22 +19,22 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           bottom: const TabBar(tabs: [
             Tab(
-              text: "Google Books",
+              text: "Browse",
               icon: Icon(Icons.language),
             ),
             Tab(
-              text: "My Favorites",
+              text: "Favorites",
               icon: Icon(Icons.favorite),
             ),
           ]),
-          title: const Text("Google Books"),
+          title: const Text("My Books"),
         ),
         body: TabBarView(
           children: [
             Column(
-              children: const [
+              children: [
                 SearchBar(),
-                Expanded(child: QueryBookList()),
+                const Expanded(child: QueryBookList()),
               ],
             ),
             const FavoriteBookList(),
@@ -44,88 +46,115 @@ class HomePage extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  SearchBar({Key? key}) : super(key: key);
+
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListTile(
-        tileColor: Colors.grey[200],
-        title: TextField(
-          onChanged: (value) =>
-              context.read<BookSearcherCubit>().keywordChanged(value),
-          decoration: const InputDecoration(
-            hintText: 'type in search keyword...',
-            border: InputBorder.none,
+      padding: const EdgeInsets.all(8),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: 'type in search keyword...',
+          border: const OutlineInputBorder(),
+          prefixIcon: IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              context
+                  .read<BookSearcherCubit>()
+                  .newQueryStarted(controller.text);
+              FocusScope.of(context).unfocus();
+            },
           ),
-          textInputAction: TextInputAction.done,
+          suffixIcon: IconButton(
+            onPressed: () => controller.clear(),
+            icon: const Icon(Icons.clear),
+          ),
         ),
-        trailing: IconButton(
-          onPressed: () {
-            context.read<BookSearcherCubit>().queryStarted();
-            FocusScope.of(context).unfocus();
-          },
-          icon: const Icon(Icons.search),
-        ),
+        textInputAction: TextInputAction.search,
+        onSubmitted: (value) =>
+            context.read<BookSearcherCubit>().newQueryStarted(value),
       ),
     );
   }
 }
 
 class QueryBookList extends StatelessWidget {
-  const QueryBookList({Key? key}) : super(key: key);
+  const QueryBookList({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scrollController =
+        getIt<MyScrollController>().getScrollController();
+
+    scrollController.addListener(() {
+      if (scrollController.offset >=
+              scrollController.position.maxScrollExtent &&
+          !scrollController.position.outOfRange) {
+        context.read<BookSearcherCubit>().curQueryExtended();
+      }
+    });
+
     return BlocBuilder<BookSearcherCubit, BookSearcherState>(
       builder: (context, state) {
-        return state.map(
-          initial: (_) => Container(),
-          loadInProgress: (_) =>
-              const Center(child: CircularProgressIndicator()),
-          loadFailure: (_) => const Center(
-            child: Text('search failed :-('),
-          ),
-          loadSuccess: (state) => BookList(
-              books: state.books, actionButtonIconData: Icons.favorite),
+        return ListView.builder(
+          controller: scrollController,
+          itemCount: state.books.length + 1,
+          itemBuilder: (context, index) {
+            if (index < state.books.length) {
+              final book = state.books[index];
+
+              return BookListTile(
+                  book: book, actionButtonIconData: Icons.favorite);
+            } else {
+              return state.isLoading
+                  ? const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : state.books.isEmpty && state.loadingFailed
+                      ? const Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Center(
+                              child: Text('❌ No results. Try again 😊.')),
+                        )
+                      : const SizedBox(height: 48);
+            }
+          },
         );
       },
     );
   }
 }
 
-class BookList extends StatelessWidget {
-  const BookList({
+class BookListTile extends StatelessWidget {
+  const BookListTile({
     Key? key,
-    required this.books,
+    required this.book,
     required this.actionButtonIconData,
   }) : super(key: key);
 
-  final List<Book> books;
+  final Book book;
   final IconData actionButtonIconData;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: books.length,
-        itemBuilder: (context, index) {
-          final book = books[index];
-
-          return ListTile(
-            onTap: () => showDialog(
-              context: context,
-              builder: (_) => DetailsPage(book, context: context),
-            ),
-            leading: BookImage(book: book, sizeRatio: 0.1),
-            trailing: AddDeleteFavoriteButton(
-                book: book, context: context, iconData: actionButtonIconData),
-            title:
-                Text(book.title, overflow: TextOverflow.ellipsis, maxLines: 2),
-            subtitle: Text(book.authors.join(", "),
-                overflow: TextOverflow.ellipsis, maxLines: 1),
-          );
-        });
+    return ListTile(
+      onTap: () => showDialog(
+        context: context,
+        builder: (_) => DetailsPage(book, context: context),
+      ),
+      leading: BookImage(book: book, sizeRatio: 0.1),
+      trailing: AddDeleteFavoriteButton(
+          book: book, context: context, iconData: actionButtonIconData),
+      title: Text(book.title, overflow: TextOverflow.ellipsis, maxLines: 2),
+      subtitle: Text(book.authors.join(", "),
+          overflow: TextOverflow.ellipsis, maxLines: 1),
+    );
   }
 }
 
@@ -173,9 +202,29 @@ class FavoriteBookList extends StatelessWidget {
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state.favoriteBooks.isEmpty) {
+            return Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: const Text(
+                  'No favorite books added yet. Search for books and add some 📚💓.',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
           } else {
-            return BookList(
-                books: state.favoriteBooks, actionButtonIconData: Icons.delete);
+            return ListView.builder(
+              itemCount: state.favoriteBooks.length,
+              itemBuilder: (context, index) {
+                final book = state.favoriteBooks[index];
+
+                return BookListTile(
+                    book: book, actionButtonIconData: Icons.delete);
+              },
+            );
           }
         },
       );

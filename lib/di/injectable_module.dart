@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:injectable/injectable.dart';
 import 'package:objectbox/objectbox.dart';
@@ -11,6 +12,5 @@ abstract class InjectableModule {
       await SharedPreferences.getInstance();
   @preResolve
   Future<Store> get store async => await openStore();
-
   Client get httpClient => Client();
 }
