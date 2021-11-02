@@ -20,6 +20,7 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
       loadingFailed: false,
       curQuerryKeyword: keyword,
       books: [],
+      nextStartIndex: 0,
     ));
 
     try {
@@ -40,10 +41,8 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
     } on ServerException {
       emit(
         state.copyWith(
-          books: [],
           isLoading: false,
           loadingFailed: true,
-          nextStartIndex: 0,
         ),
       );
     }
@@ -52,6 +51,7 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
   Future<void> curQueryExtended() async {
     emit(state.copyWith(
       isLoading: true,
+      loadingFailed: false,
     ));
 
     try {
@@ -63,17 +63,17 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
         emit(
           state.copyWith(
             books: state.books + books,
+            loadingFailed: false,
             isLoading: false,
             nextStartIndex: state.nextStartIndex + 10,
           ),
         );
       }
-    } on ServerException {
+    } on Exception {
       emit(
         state.copyWith(
-          books: [],
           isLoading: false,
-          nextStartIndex: 0,
+          loadingFailed: true,
         ),
       );
     }

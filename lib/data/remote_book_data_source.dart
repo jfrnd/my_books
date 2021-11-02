@@ -7,7 +7,7 @@ import '../apikey.dart';
 import '../exceptions.dart';
 
 abstract class IRemoteBookDataSource {
-  /// Calls the https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=40&key=$apiKey endpoint.
+  /// Calls the https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=10&startIndex=$startIndex&key=$apiKey endpoint.
   ///
   /// Throws a [ServerException] for all error codes.
   Future<List<Book>> getBooks(String keyword, int startIndex);
@@ -22,7 +22,10 @@ class RemoteBookDataSource implements IRemoteBookDataSource {
   @override
   Future<List<Book>> getBooks(String keyword, int startIndex) {
     final url = Uri.parse(
-      'https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=10&startIndex=$startIndex&key=$apiKey',
+      // 'https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=10&startIndex=$startIndex&key=$apiKey',
+      // Querry without api key due to error message with error code 429:
+      // "Quota exceeded for quota metric 'Queries' and limit 'Queries per day' of service 'books.googleapis.com' for consumer 'project_number:809540370189'."
+      'https://www.googleapis.com/books/v1/volumes?q=$keyword&maxResults=10&startIndex=$startIndex',
     );
 
     return client.get(url).then(

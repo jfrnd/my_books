@@ -109,11 +109,13 @@ class QueryBookList extends StatelessWidget {
               final book = state.books[index];
 
               return BookListTile(
-                  book: book, actionButtonIconData: Icons.favorite);
+                book: book,
+                actionButtonIconData: Icons.favorite,
+              );
             } else {
               return state.isLoading
                   ? const Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: EdgeInsets.only(bottom: 8.0),
                       child: Center(child: CircularProgressIndicator()),
                     )
                   : state.books.isEmpty && state.loadingFailed
@@ -122,7 +124,7 @@ class QueryBookList extends StatelessWidget {
                           child: Center(
                               child: Text('❌ No results. Try again 😊.')),
                         )
-                      : const SizedBox(height: 48);
+                      : const SizedBox(height: 64);
             }
           },
         );
@@ -222,7 +224,9 @@ class FavoriteBookList extends StatelessWidget {
                 final book = state.favoriteBooks[index];
 
                 return BookListTile(
-                    book: book, actionButtonIconData: Icons.delete);
+                  book: book,
+                  actionButtonIconData: Icons.delete,
+                );
               },
             );
           }

@@ -29,7 +29,7 @@ class DetailsPage extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(16, 8, 0, 0),
               child: Column(children: [
                 Row(
                   children: [
@@ -42,36 +42,51 @@ class DetailsPage extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 7,
-                      child: Column(
-                        children: [
-                          ListTile(
-                            title: Text(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               book.title,
+                              style: Theme.of(context).textTheme.headline5,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            subtitle: Text(
+                            Text(
                               book.subtitle,
+                              style: Theme.of(context).textTheme.subtitle1,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                          ListTile(
-                            title: Text(
-                              book.authors.join(', '),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Text(
+                                book.authors.join(', '),
+                                style: Theme.of(context).textTheme.headline6,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(book.description),
-                ),
+                book.description.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                          color: Colors.grey[100],
+                          child: Text(
+                            book.description,
+                            style: Theme.of(context).textTheme.headline6!,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
               ]),
             ),
           ),
