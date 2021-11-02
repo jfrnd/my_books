@@ -4,11 +4,9 @@ import 'package:kleine_aufgabe/cubit/book_searcher_cubit.dart';
 import 'package:kleine_aufgabe/cubit/favorite_manager_cubit.dart';
 import 'package:kleine_aufgabe/di/injection.dart';
 import 'package:kleine_aufgabe/di/scroll_controller.dart';
-import 'package:kleine_aufgabe/model/book.dart';
 import 'package:kleine_aufgabe/presentation/widgets/book_list_tile.dart';
 import 'package:kleine_aufgabe/presentation/widgets/search_bar.dart';
 
-import 'details_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,10 +16,6 @@ class HomePage extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => context.read<BookSearcherCubit>().curQueryExtended(),
-          child: Icon(Icons.search),
-        ),
         appBar: AppBar(
           bottom: const TabBar(tabs: [
             Tab(
