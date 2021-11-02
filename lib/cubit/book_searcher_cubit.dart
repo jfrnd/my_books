@@ -23,7 +23,7 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
     ));
 
     try {
-      final books = await remoteDataSource.getBooksExtended(
+      final books = await remoteDataSource.getBooks(
         keyword,
         0,
       );
@@ -55,7 +55,7 @@ class BookSearcherCubit extends Cubit<BookSearcherState> {
     ));
 
     try {
-      final books = await remoteDataSource.getBooksExtended(
+      final books = await remoteDataSource.getBooks(
         state.curQuerryKeyword,
         state.nextStartIndex,
       );

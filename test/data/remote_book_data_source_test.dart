@@ -41,7 +41,7 @@ void main() {
         // arrange
         setUpMockHttpClientSuccess200();
         // act
-        dataSource.getBooks(keyword);
+        dataSource.getBooks(keyword, 0);
         // assert
         verify(
           () => mockHttpClient.get(
@@ -59,7 +59,7 @@ void main() {
         // arrange
         setUpMockHttpClientSuccess200();
         // act
-        final result = await dataSource.getBooks(keyword);
+        final result = await dataSource.getBooks(keyword, 0);
         // assert
         expect(result, equals(books));
       },
@@ -73,8 +73,8 @@ void main() {
         // act
         final call = dataSource.getBooks;
         // assert
-        expect(
-            () => call(keyword), throwsA(const TypeMatcher<ServerException>()));
+        expect(() => call(keyword, 0),
+            throwsA(const TypeMatcher<ServerException>()));
       },
     );
   });
